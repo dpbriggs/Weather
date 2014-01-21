@@ -1,5 +1,7 @@
 import xml.etree.ElementTree as etree
 import urllib.request
+import textwrap
+from random import randint
 
 def weatherdata():
     url = 'http://weather.yahooapis.com/forecastrss?w=6&u=c'
@@ -15,12 +17,15 @@ def weatherdata():
     hold = [wind0, day0, day1, day2]
     return hold
 
+
+
 def message(data): #Generate small message to summarize weather (mostly based on tempurature and windspeed)
     day0 = data[1]
     windchill = int(data[0]['chill'])
     windspeed = float(data[0]['speed'])
     high = int(day0['high'])
     low = int(day0['low'])
+    weather = list((low, high))
     #conditions = day0['text']
     message = []
     b = lambda x, a, b: True if x > a and x <= b else False # b = Between
@@ -30,7 +35,7 @@ def message(data): #Generate small message to summarize weather (mostly based on
         if scarf:
             message.append("It's extremely cold, You will need a good jacket and a scarf.")
         else:
-            message.append("It's extremely cold, You will need a good jacket and maybe a scarf.")   
+            message.append("It's extremely cold, You will need to wear a jacket and maybe a scarf.")   
     elif b(low, -20, 0) or b(windchill, -20, 0):
         if scarf:
             message.append("It's pretty cold, You'll need a good jacket and a scarf.")
@@ -46,14 +51,64 @@ def message(data): #Generate small message to summarize weather (mostly based on
     ## Check if there's a large difference in high/low
     if abs(high) - abs(low) > 10:
         message.append(" You may also want to dress in layers, the tempurature changes a lot")
-    return message
+    messStr = ''
+    for i in message:
+        messStr = messStr + i
+    
+    return str(messStr), list(weather)
 
+def quotes():
+    url = 'http://www.quotesdaddy.com/feed'
+    try:
+        xmltext = (urllib.request.urlretrieve(url))
+    except:
+        print('Internet connection is not valid')
+    root = (etree.parse(xmltext[0])).getroot()
+    quotes = []
+    for n in root.iter('description'):
+        quotes.append(n.text)
+    return quotes[1]
+       
+            
+        
 
+def drawmenu(message, weather, quote):
+    lnc = 63 #How many characters you want the screen to be wide (Line Count)
+    high = weather[0]
+    low = weather[1]
+    genline = lambda mes: print(' '*((lnc - len(mes) -1)//2) + mes + ' '*((lnc - len(mes) -1)//2)) #Centre text on screen based on lnc
+    weatherline = "High: " + str(high) + u'°' + "C" + "   " + "Low: " + str(low) + u'°' + "C" 
+
+    Bweather = textwrap.wrap(weatherline, lnc - 5)
+    Bmessage = textwrap.wrap(message, lnc - 5)
+    Bquote = textwrap.wrap(quote, lnc - 5)
+
+   
+    #check = True if line[1] != '' else False
+    
+    
+    print('='*lnc) # 63 characters long
+    print('')
+    for i in Bweather:
+        genline(i)
+    print('')
+    for i in Bmessage:
+        genline(i)
+    print('')
+    print('='*lnc)
+    print('')
+    genline('Quote:')
+    print('')
+    for i in Bquote:
+        genline(i)
+    print('')
+    print('='*lnc)
+    
 
 def main():
     data = weatherdata()
     #print(data)
-    messagex = message(data)
-    print(messagex)
-
+    messagex, weather = message(data)
+    quote = quotes()
+    drawmenu(messagex, weather, quote)
 main()
