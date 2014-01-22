@@ -92,14 +92,14 @@ def drawmenu(message, weather, quote, current):
     genline = lambda mes: print(' '*((lnc - len(mes) -1)//2) + mes + ' '*((lnc - len(mes) -1)//2)) #Centre text on screen based on lnc
     
     ## Regular lines
-    wind = str(current[2]) + ' Km/H ' + str(current[3]) + ' | ' + str(current[1])
+    wind = str(current[2]) + ' km/H ' + str(current[3]) + ' | ' + str(current[1])
     weatherline = "High: " + str(high) + u'°' + "C" + " " + "Low: " + str(low) + u'°' + "C"  + ' | ' + wind 
     Bweather = textwrap.wrap(weatherline, lnc - 5)#Ensure that lines fit line character limit
     Bmessage = textwrap.wrap(message, lnc - 5)
     Bquote = textwrap.wrap(quote, lnc - 5)
     
     ## Current conditions
-    temp = 'Current Temperture: ' + str(current[0]) + u'°' + "C"
+    temp = 'Current Temperature: ' + str(current[0]) + u'°' + "C"
     
     
     
