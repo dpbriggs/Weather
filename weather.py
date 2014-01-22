@@ -90,19 +90,21 @@ def drawmenu(message, weather, quote, current):
     high = weather[1]
     low = weather[0]
     genline = lambda mes: print(' '*((lnc - len(mes) -1)//2) + mes + ' '*((lnc - len(mes) -1)//2)) #Centre text on screen based on lnc
-    weatherline = "High: " + str(high) + u'°' + "C" + "   " + "Low: " + str(low) + u'°' + "C" 
+    
     ## Regular lines
-    Bweather = textwrap.wrap(weatherline, lnc - 5) #Ensure that lines fit line character limit
+    wind = str(current[2]) + ' Km/H ' + str(current[3]) + ' | ' + str(current[1])
+    weatherline = "High: " + str(high) + u'°' + "C" + " " + "Low: " + str(low) + u'°' + "C"  + ' | ' + wind 
+    Bweather = textwrap.wrap(weatherline, lnc - 5)#Ensure that lines fit line character limit
     Bmessage = textwrap.wrap(message, lnc - 5)
     Bquote = textwrap.wrap(quote, lnc - 5)
     
     ## Current conditions
-    temp = 'Current Temperture: ' + str(current[0])
-    wind = str(current[2]) + ' Km/H ' + str(current[3]) + ' | ' + str(current[1])
+    temp = 'Current Temperture: ' + str(current[0]) + u'°' + "C"
+    
     
     
     Btemp = textwrap.wrap(temp, lnc - 5)
-    Bwind = textwrap.wrap(wind, lnc - 5)
+    #Bwind = textwrap.wrap(wind, lnc - 5)
     
     print('='*lnc) # 63 characters long
     print('')
@@ -112,11 +114,7 @@ def drawmenu(message, weather, quote, current):
     print('')
     for i in Bweather:
         genline(i)
-
-    print('')
-    for i in Bwind:
-        genline(i)
-
+    
     print('')
     
     for i in Bmessage:
